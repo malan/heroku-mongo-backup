@@ -38,12 +38,12 @@ module HerokuMongoBackup
         collection.find().each { |doc| backup[collection.name] << doc }
       end
 
-      backup.each do |collection|
-        puts "*************************************************"
-        puts "*************************************************"
-        puts collection.inspect
-        YAML::dump(collection)
-      end
+      # backup.each do |collection|
+      #   puts "*************************************************"
+      #   puts "*************************************************"
+      #   puts collection.inspect
+      #   YAML::dump(collection)
+      # end
 
       yaml_dump = YAML::dump(backup)
 
