@@ -38,12 +38,19 @@ module HerokuMongoBackup
         collection.find().each { |doc| backup[collection.name] << doc }
       end
 
-      marshal_dump = Marshal.dump(backup)
+      backup.each do |collection|
+        puts "*************************************************"
+        puts "*************************************************"
+        puts collection.inspect
+        YAML::dump(collection)
+      end
+
+      yaml_dump = YAML::dump(backup)
 
       file = File.new(@file_name, 'w')
       file.binmode
       file = Zlib::GzipWriter.new(file)
-      file.write marshal_dump
+      file.write yaml_dump
       file.close
     end
 
@@ -51,7 +58,7 @@ module HerokuMongoBackup
       session = ::Mongoid::Clients.default
 
       file   = Zlib::GzipReader.open(@file_name)
-      backup = Marshal.load file.read
+      backup = YAML::load file.read
       file.close
 
       Mongoid.purge!
