@@ -145,7 +145,11 @@ module HerokuMongoBackup
     end
 
     def initialize connect=true
-      @file_name = ENV['BACKUP_FILENAME'] or Time.now.strftime("%Y-%m-%d_%H-%M-%S.gz")
+      if(ENV['BACKUP_FILENAME'].nil?)
+        @file_name = Time.now.strftime("%Y-%m-%d_%H-%M-%S.gz")
+      else
+        @file_name = ENV['BACKUP_FILENAME']
+      end
 
       if connect
         if ENV['UPLOAD_TYPE'] == 'ftp'
